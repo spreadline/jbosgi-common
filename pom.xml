@@ -27,13 +27,12 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
   </parent>
   
   <properties>
-    <version.jboss.logging>2.0.5.GA</version.jboss.logging>
-    <version.jboss.osgi.spi>1.0.0</version.jboss.osgi.spi>
-    <version.osgi>r4v41</version.osgi>
+    <version.jboss.osgi.spi>1.0.1-SNAPSHOT</version.jboss.osgi.spi>
+    <version.osgi>r4v42-20090728</version.osgi>
   </properties>
   
   <!-- Dependencies -->
@@ -42,13 +41,6 @@
       <groupId>org.jboss.osgi</groupId>
       <artifactId>jboss-osgi-spi</artifactId>
       <version>${version.jboss.osgi.spi}</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging-spi</artifactId>
-      <version>${version.jboss.logging}</version>
-      <scope>provided</scope>
     </dependency>
     
     <!-- OSGi Dependencies -->
