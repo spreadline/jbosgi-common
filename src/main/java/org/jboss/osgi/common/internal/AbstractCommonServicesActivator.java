@@ -46,7 +46,7 @@ import org.osgi.util.tracker.ServiceTracker;
  */
 public abstract class AbstractCommonServicesActivator
 {
-   protected void trackLogReaderService(BundleContext context)
+   protected ServiceTracker trackLogReaderService(BundleContext context)
    {
       ServiceTracker logTracker = new ServiceTracker(context, LogReaderService.class.getName(), null)
       {
@@ -58,7 +58,7 @@ public abstract class AbstractCommonServicesActivator
             return logReader;
          }
       };
-      logTracker.open();
+      return logTracker;
    }
 
    protected DeployerService registerDeployerServices(BundleContext context)

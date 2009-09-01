@@ -42,20 +42,22 @@ import org.osgi.util.tracker.ServiceTracker;
  */
 public class CommonServicesActivator extends AbstractCommonServicesActivator implements BundleActivator
 {
-   private LogService log;
+   private LogServiceTracker logServiceTracker;
+   private ServiceTracker logReaderTracker;
    
    @Override
    protected void logError(String message, Exception ex)
    {
-      log.log(LogService.LOG_ERROR, message, ex);
+      logServiceTracker.log(LogService.LOG_ERROR, message, ex);
    }
 
    public void start(BundleContext context)
    {
-      log = new LogServiceTracker(context);
+      logServiceTracker = new LogServiceTracker(context);
       
       // Track LogReaderService and add/remove LogListener
-      trackLogReaderService(context);
+      logReaderTracker = trackLogReaderService(context);
+      logReaderTracker.open();
       
       // Register the system SystemDeployerService and DeployerServiceDelegate
       DeployerService deployer = registerDeployerServices(context);
@@ -64,6 +66,22 @@ public class CommonServicesActivator extends AbstractCommonServicesActivator imp
       trackMBeanServer(context, deployer);
    }
 
+   public void stop(BundleContext context)
+   {
+      if (logServiceTracker != null)
+         logServiceTracker.close();
+      
+      if (logReaderTracker != null)
+         logReaderTracker.close();
+      
+      ServiceReference sref = context.getServiceReference(MBeanServer.class.getName());
+      if (sref != null)
+      {
+         MBeanServer mbeanServer = (MBeanServer)context.getService(sref);
+         unregisterDeployerServiceMBean(mbeanServer);
+      }
+   }
+   
    private void trackMBeanServer(BundleContext context, final DeployerService deployer)
    {
       ServiceTracker jmxTracker = new ServiceTracker(context, MBeanServer.class.getName(), null)
@@ -85,15 +103,5 @@ public class CommonServicesActivator extends AbstractCommonServicesActivator imp
          }
       };
       jmxTracker.open();
-   }
-
-   public void stop(BundleContext context)
-   {
-      ServiceReference sref = context.getServiceReference(MBeanServer.class.getName());
-      if (sref != null)
-      {
-         MBeanServer mbeanServer = (MBeanServer)context.getService(sref);
-         unregisterDeployerServiceMBean(mbeanServer);
-      }
    }
 }
