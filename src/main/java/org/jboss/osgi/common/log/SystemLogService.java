@@ -68,9 +68,18 @@ public class SystemLogService implements LogService
 
    private void logInternal(ServiceReference sref, int level, String message, Throwable exception)
    {
-      long time = System.currentTimeMillis();
-      Bundle bundle = context.getBundle();
+      Bundle bundle;
+      try
+      {
+         bundle = context.getBundle();
+      }
+      catch (IllegalStateException ex)
+      {
+         // If this BundleContext is no longer valid.
+         return;
+      }
       
+      long time = System.currentTimeMillis();
       String bndStr = bundle.getSymbolicName();
       
       String srefStr = null;
