@@ -40,6 +40,7 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
+import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -65,7 +66,7 @@ public class SystemDeployerService implements DeployerService
    public void deploy(BundleDeployment[] depArr) throws BundleException
    {
       DeploymentRegistryService registry = getDeploymentRegistry();
-      
+
       Map<BundleDeployment, Bundle> bundleMap = new HashMap<BundleDeployment, Bundle>();
       for (BundleDeployment dep : depArr)
       {
@@ -77,7 +78,7 @@ public class SystemDeployerService implements DeployerService
 
             registerManagedBundle(bundle);
             bundleMap.put(dep, bundle);
-            
+
             registry.registerBundleDeployment(dep);
          }
          catch (BundleException ex)
@@ -86,11 +87,17 @@ public class SystemDeployerService implements DeployerService
          }
       }
 
+      // Get the optional PackageAdmin
+      PackageAdmin packageAdmin = null;
+      ServiceReference sref = context.getServiceReference(PackageAdmin.class.getName());
+      if (sref != null)
+         packageAdmin = (PackageAdmin)context.getService(sref);
+      
       // Start the installed bundles
       for (BundleDeployment dep : depArr)
       {
          Bundle bundle = bundleMap.get(dep);
-         
+
          StartLevel startLevel = getStartLevel();
          if (dep.getStartLevel() > 0)
          {
@@ -99,23 +106,35 @@ public class SystemDeployerService implements DeployerService
 
          if (dep.isAutoStart())
          {
-            ExportedPackageHelper packageHelper = new ExportedPackageHelper(context);
-            try
+            int state = bundle.getState();
+            if (state == Bundle.INSTALLED && packageAdmin != null)
             {
-               log.log(LogService.LOG_DEBUG, "Start: " + bundle);
+               if (packageAdmin.resolveBundles(new Bundle[] { bundle }) == false)
+                  log.log(LogService.LOG_INFO, "Cannot resolve bundle: " + bundle);
                
-               // Added support for Bundle.START_ACTIVATION_POLICY on start
-               // http://issues.apache.org/jira/browse/FELIX-1317
-               // bundle.start(Bundle.START_ACTIVATION_POLICY);
-               
-               bundle.start();
-               
-               log.log(LogService.LOG_INFO, "Started: " + bundle);
-               packageHelper.logExportedPackages(bundle);
+               state = bundle.getState();
             }
-            catch (BundleException ex)
+            
+            if (state == Bundle.RESOLVED || packageAdmin == null)
             {
-               log.log(LogService.LOG_ERROR, "Cannot start bundle: " + bundle, ex);
+               try
+               {
+                  log.log(LogService.LOG_DEBUG, "Start: " + bundle);
+
+                  // Added support for Bundle.START_ACTIVATION_POLICY on start
+                  // http://issues.apache.org/jira/browse/FELIX-1317
+                  // bundle.start(Bundle.START_ACTIVATION_POLICY);
+
+                  bundle.start();
+
+                  log.log(LogService.LOG_INFO, "Started: " + bundle);
+                  ExportedPackageHelper packageHelper = new ExportedPackageHelper(context);
+                  packageHelper.logExportedPackages(bundle);
+               }
+               catch (BundleException ex)
+               {
+                  log.log(LogService.LOG_ERROR, "Cannot start bundle: " + bundle, ex);
+               }
             }
          }
       }
@@ -124,14 +143,14 @@ public class SystemDeployerService implements DeployerService
    public void undeploy(BundleDeployment[] depArr) throws BundleException
    {
       DeploymentRegistryService registry = getDeploymentRegistry();
-      
+
       for (BundleDeployment dep : depArr)
       {
          Bundle bundle = getBundle(dep);
          if (bundle != null)
          {
             registry.unregisterBundleDeployment(dep);
-            
+
             unregisterManagedBundle(bundle);
             bundle.uninstall();
             log.log(LogService.LOG_INFO, "Uninstalled: " + bundle);
@@ -213,7 +232,7 @@ public class SystemDeployerService implements DeployerService
          log.log(LogService.LOG_DEBUG, "No ManagedBundleService. Cannot unregister managed bundle: " + bundle);
       }
    }
-   
+
    private DeploymentRegistryService getDeploymentRegistry()
    {
       if (registryTracker == null)
@@ -223,7 +242,7 @@ public class SystemDeployerService implements DeployerService
       }
       return (DeploymentRegistryService)registryTracker.getService();
    }
-   
+
    private StartLevel getStartLevel()
    {
       if (startLevelTracker == null)
