@@ -31,6 +31,7 @@ import org.jboss.osgi.spi.service.DeployerService;
 import org.jboss.osgi.spi.service.DeploymentRegistryService;
 import org.jboss.osgi.spi.util.BundleDeployment;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Version;
 
 /**
  * A {@link DeployerService} that installs/uninstalls the bundles directly on the OSGi framework without going through the MC registered deployers.
@@ -56,7 +57,7 @@ public class DeploymentRegistryServiceImpl implements DeploymentRegistryService
       deployments.remove(dep);
    }
    
-   public BundleDeployment getBundleDeployment(String symbolicName, String version)
+   public BundleDeployment getBundleDeployment(String symbolicName, Version version)
    {
       if (symbolicName == null)
          throw new IllegalArgumentException("Cannot obtain bundle deployment for null symbolic name");
@@ -65,8 +66,8 @@ public class DeploymentRegistryServiceImpl implements DeploymentRegistryService
       for (BundleDeployment auxDep : deployments)
       {
          String auxName = auxDep.getSymbolicName();
-         String auxVersion = auxDep.getVersion();
-         if (symbolicName.equals(auxName) && (version == null || version.equals(auxVersion)))
+         Version auxVersion = auxDep.getVersion();
+         if (symbolicName.equals(auxName) && version.equals(auxVersion))
          {
             dep = auxDep;
             break;

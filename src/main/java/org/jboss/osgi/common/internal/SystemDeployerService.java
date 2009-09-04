@@ -37,8 +37,8 @@ import org.jboss.osgi.spi.util.BundleDeploymentFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.Version;
 import org.osgi.service.log.LogService;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
@@ -187,15 +187,15 @@ public class SystemDeployerService implements DeployerService
    private Bundle getBundle(BundleDeployment dep)
    {
       String symbolicName = dep.getSymbolicName();
-      String version = dep.getVersion();
+      Version version = dep.getVersion();
 
       Bundle bundle = null;
       for (Bundle aux : context.getBundles())
       {
          if (aux.getSymbolicName().equals(symbolicName))
          {
-            String auxVersion = (String)aux.getHeaders().get(Constants.BUNDLE_VERSION);
-            if (version == null || version.equals(auxVersion))
+            Version auxVersion = aux.getVersion();
+            if (version.equals(auxVersion))
             {
                bundle = aux;
                break;
