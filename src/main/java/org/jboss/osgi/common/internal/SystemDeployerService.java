@@ -24,6 +24,7 @@ package org.jboss.osgi.common.internal;
 //$Id$
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +68,7 @@ public class SystemDeployerService implements DeployerService
    {
       DeploymentRegistryService registry = getDeploymentRegistry();
 
+      // Install the bundles
       Map<BundleDeployment, Bundle> bundleMap = new HashMap<BundleDeployment, Bundle>();
       for (BundleDeployment dep : depArr)
       {
@@ -87,11 +89,19 @@ public class SystemDeployerService implements DeployerService
          }
       }
 
-      // Get the optional PackageAdmin
+      // Resolve the bundles through the PackageAdmin
       PackageAdmin packageAdmin = null;
       ServiceReference sref = context.getServiceReference(PackageAdmin.class.getName());
       if (sref != null)
+      {
          packageAdmin = (PackageAdmin)context.getService(sref);
+         
+         Collection<Bundle> bundles = bundleMap.values();
+         Bundle[] bundleArr = new Bundle[bundles.size()];
+         bundles.toArray(bundleArr);
+         
+         packageAdmin.resolveBundles(bundleArr);
+      }
       
       // Start the installed bundles
       for (BundleDeployment dep : depArr)
@@ -107,14 +117,6 @@ public class SystemDeployerService implements DeployerService
          if (dep.isAutoStart())
          {
             int state = bundle.getState();
-            if (state == Bundle.INSTALLED && packageAdmin != null)
-            {
-               if (packageAdmin.resolveBundles(new Bundle[] { bundle }) == false)
-                  log.log(LogService.LOG_INFO, "Cannot resolve bundle: " + bundle);
-               
-               state = bundle.getState();
-            }
-            
             if (state == Bundle.RESOLVED || packageAdmin == null)
             {
                try
@@ -135,6 +137,10 @@ public class SystemDeployerService implements DeployerService
                {
                   log.log(LogService.LOG_ERROR, "Cannot start bundle: " + bundle, ex);
                }
+            }
+            else
+            {
+               log.log(LogService.LOG_INFO, "Cannot start unresolved bundle: " + bundle);
             }
          }
       }
