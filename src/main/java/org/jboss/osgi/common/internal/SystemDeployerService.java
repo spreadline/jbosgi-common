@@ -24,9 +24,9 @@ package org.jboss.osgi.common.internal;
 //$Id$
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jboss.osgi.common.log.LogServiceTracker;
 import org.jboss.osgi.spi.logging.ExportedPackageHelper;
@@ -68,7 +68,6 @@ public class SystemDeployerService implements DeployerService
    {
       DeploymentRegistryService registry = getDeploymentRegistry();
 
-      // Install the bundles
       Map<BundleDeployment, Bundle> bundleMap = new HashMap<BundleDeployment, Bundle>();
       for (BundleDeployment dep : depArr)
       {
@@ -89,24 +88,19 @@ public class SystemDeployerService implements DeployerService
          }
       }
 
-      // Resolve the bundles through the PackageAdmin
-      PackageAdmin packageAdmin = null;
-      ServiceReference sref = context.getServiceReference(PackageAdmin.class.getName());
-      if (sref != null)
+      // Resolve the installed bundles through the PackageAdmin
+      ServiceReference packageAdminRef = context.getServiceReference(PackageAdmin.class.getName());
+      if (packageAdminRef != null)
       {
-         packageAdmin = (PackageAdmin)context.getService(sref);
-         
-         Collection<Bundle> bundles = bundleMap.values();
-         Bundle[] bundleArr = new Bundle[bundles.size()];
-         bundles.toArray(bundleArr);
-         
-         packageAdmin.resolveBundles(bundleArr);
+         PackageAdmin packageAdmin = (PackageAdmin)context.getService(packageAdminRef);
+         packageAdmin.resolveBundles(null);
       }
       
       // Start the installed bundles
-      for (BundleDeployment dep : depArr)
+      for (Entry<BundleDeployment, Bundle> entry : bundleMap.entrySet())
       {
-         Bundle bundle = bundleMap.get(dep);
+         BundleDeployment dep = entry.getKey();
+         Bundle bundle = entry.getValue();
 
          StartLevel startLevel = getStartLevel();
          if (dep.getStartLevel() > 0)
@@ -117,7 +111,7 @@ public class SystemDeployerService implements DeployerService
          if (dep.isAutoStart())
          {
             int state = bundle.getState();
-            if (state == Bundle.RESOLVED || packageAdmin == null)
+            if (state == Bundle.RESOLVED || packageAdminRef == null)
             {
                try
                {
@@ -137,10 +131,6 @@ public class SystemDeployerService implements DeployerService
                {
                   log.log(LogService.LOG_ERROR, "Cannot start bundle: " + bundle, ex);
                }
-            }
-            else
-            {
-               log.log(LogService.LOG_INFO, "Cannot start unresolved bundle: " + bundle);
             }
          }
       }
