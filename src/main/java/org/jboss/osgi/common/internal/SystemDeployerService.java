@@ -24,7 +24,9 @@ package org.jboss.osgi.common.internal;
 //$Id$
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -68,7 +70,9 @@ public class SystemDeployerService implements DeployerService
    {
       DeploymentRegistryService registry = getDeploymentRegistry();
 
+      List<Bundle> resolvableBundles = new ArrayList<Bundle>();
       Map<BundleDeployment, Bundle> bundleMap = new HashMap<BundleDeployment, Bundle>();
+      
       for (BundleDeployment dep : depArr)
       {
          try
@@ -78,7 +82,10 @@ public class SystemDeployerService implements DeployerService
             log.log(LogService.LOG_INFO, "Installed: " + bundle);
 
             registerManagedBundle(bundle);
+            
             bundleMap.put(dep, bundle);
+            if (dep.isAutoStart())
+               resolvableBundles.add(bundle);
 
             registry.registerBundleDeployment(dep);
          }
@@ -90,10 +97,12 @@ public class SystemDeployerService implements DeployerService
 
       // Resolve the installed bundles through the PackageAdmin
       ServiceReference packageAdminRef = context.getServiceReference(PackageAdmin.class.getName());
-      if (packageAdminRef != null)
+      if (packageAdminRef != null && resolvableBundles.isEmpty() == false)
       {
          PackageAdmin packageAdmin = (PackageAdmin)context.getService(packageAdminRef);
-         packageAdmin.resolveBundles(null);
+         Bundle[] resolvableBundleArr = new Bundle[resolvableBundles.size()];
+         resolvableBundles.toArray(resolvableBundleArr);
+         packageAdmin.resolveBundles(resolvableBundleArr);
       }
       
       // Start the installed bundles
