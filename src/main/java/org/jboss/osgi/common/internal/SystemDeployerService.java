@@ -192,7 +192,7 @@ public class SystemDeployerService implements DeployerService
    private Bundle getBundle(BundleDeployment dep)
    {
       String symbolicName = dep.getSymbolicName();
-      Version version = dep.getVersion();
+      Version version = Version.parseVersion(dep.getVersion());
 
       Bundle bundle = null;
       for (Bundle aux : context.getBundles())

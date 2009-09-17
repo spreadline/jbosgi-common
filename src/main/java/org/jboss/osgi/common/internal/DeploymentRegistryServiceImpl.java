@@ -66,7 +66,7 @@ public class DeploymentRegistryServiceImpl implements DeploymentRegistryService
       for (BundleDeployment auxDep : deployments)
       {
          String auxName = auxDep.getSymbolicName();
-         Version auxVersion = auxDep.getVersion();
+         String auxVersion = auxDep.getVersion();
          if (symbolicName.equals(auxName) && version.equals(auxVersion))
          {
             dep = auxDep;
