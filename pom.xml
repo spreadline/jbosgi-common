@@ -32,7 +32,7 @@
   
   <properties>
     <version.jboss.osgi.spi>1.0.2-SNAPSHOT</version.jboss.osgi.spi>
-    <version.log4j>1.2.14</version.log4j>
+    <version.slf4j>1.5.8</version.slf4j>
     <version.osgi>r4v42</version.osgi>
   </properties>
   
@@ -43,14 +43,23 @@
       <artifactId>jboss-osgi-spi</artifactId>
       <version>${version.jboss.osgi.spi}</version>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${version.slf4j}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${version.slf4j}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${version.slf4j}</version>
+    </dependency>
     
     <!-- Provided Dependencies -->
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>${version.log4j}</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
@@ -76,17 +85,11 @@
             <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
             <Bundle-Activator>org.jboss.osgi.common.internal.CommonServicesActivator</Bundle-Activator>
             <Export-Package>
-              org.apache.commons.logging;version=1.1.1,
               org.jboss.osgi.common.log;version=${version}
             </Export-Package>
-            <Private-Package>
-              org.apache.commons.logging.impl,
-              org.jboss.osgi.common.internal
-            </Private-Package>
             <Import-Package>
                javax.management,
-               org.apache.log4j;resolution=optional, 
-               org.jboss.logging,
+               org.apache.log4j;version="1.2";resolution=optional, 
                org.jboss.osgi.spi.management;version="1.0",
                org.jboss.osgi.spi.logging;version="1.0",
                org.jboss.osgi.spi.service;version="1.0",
@@ -97,6 +100,15 @@
                org.osgi.service.startlevel;version=1.1,
                org.osgi.util.tracker
             </Import-Package>
+            <Embed-Dependency>
+              jcl-over-slf4j;inline=false,
+              slf4j-api;inline=false,
+              slf4j-log4j12;inline=false,
+            </Embed-Dependency>
+            <_exportcontents>
+              org.apache.commons.logging;version=1.1.1,
+              org.slf4j;version=1.5.8,
+            </_exportcontents>
           </instructions>
         </configuration>
       </plugin>
