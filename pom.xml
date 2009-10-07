@@ -27,11 +27,12 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
   </parent>
   
   <properties>
-    <version.jboss.osgi.spi>1.0.1</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.2-SNAPSHOT</version.jboss.osgi.spi>
+    <version.log4j>1.2.14</version.log4j>
     <version.osgi>r4v42</version.osgi>
   </properties>
   
@@ -43,7 +44,13 @@
       <version>${version.jboss.osgi.spi}</version>
     </dependency>
     
-    <!-- OSGi Dependencies -->
+    <!-- Provided Dependencies -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>${version.log4j}</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
@@ -69,13 +76,16 @@
             <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
             <Bundle-Activator>org.jboss.osgi.common.internal.CommonServicesActivator</Bundle-Activator>
             <Export-Package>
+              org.apache.commons.logging;version=1.1.1,
               org.jboss.osgi.common.log;version=${version}
             </Export-Package>
             <Private-Package>
+              org.apache.commons.logging.impl,
               org.jboss.osgi.common.internal
             </Private-Package>
             <Import-Package>
-               javax.management, 
+               javax.management,
+               org.apache.log4j;resolution=optional, 
                org.jboss.logging,
                org.jboss.osgi.spi.management;version="1.0",
                org.jboss.osgi.spi.logging;version="1.0",
