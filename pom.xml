@@ -89,7 +89,7 @@
             </Export-Package>
             <Import-Package>
                javax.management,
-               org.apache.log4j;version="1.2";resolution=optional, 
+               org.apache.log4j;version="1.2";resolution:=optional, 
                org.jboss.osgi.spi.management;version="1.0",
                org.jboss.osgi.spi.logging;version="1.0",
                org.jboss.osgi.spi.service;version="1.0",
