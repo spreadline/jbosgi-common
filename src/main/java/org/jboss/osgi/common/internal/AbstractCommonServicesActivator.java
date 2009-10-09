@@ -54,7 +54,7 @@ public abstract class AbstractCommonServicesActivator
          public Object addingService(ServiceReference reference)
          {
             LogReaderService logReader = (LogReaderService)super.addingService(reference);
-            logReader.addLogListener(new LoggingLogListener());
+            logReader.addLogListener(new LogListenerBridge());
             return logReader;
          }
       };
