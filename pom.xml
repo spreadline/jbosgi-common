@@ -39,7 +39,7 @@
 
   <!-- Properties -->  
   <properties>
-    <version.jboss.osgi.spi>1.0.2</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.3-SNAPSHOT</version.jboss.osgi.spi>
     <version.slf4j>1.5.8</version.slf4j>
     <version.osgi>r4v42</version.osgi>
   </properties>
