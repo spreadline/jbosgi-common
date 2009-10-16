@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
   </parent>
   
   <!-- SCM -->
@@ -40,7 +40,6 @@
   <!-- Properties -->  
   <properties>
     <version.jboss.osgi.spi>1.0.3-SNAPSHOT</version.jboss.osgi.spi>
-    <version.slf4j>1.5.8</version.slf4j>
     <version.osgi>r4v42</version.osgi>
   </properties>
   
@@ -54,12 +53,10 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${version.slf4j}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>${version.slf4j}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
