@@ -24,14 +24,11 @@ package org.jboss.osgi.common.internal;
 //$Id$
 
 
-import javax.management.MBeanServer;
-
 import org.jboss.osgi.common.log.LogServiceTracker;
-import org.jboss.osgi.spi.service.DeployerService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.LogService;
+import org.osgi.service.log.LogReaderService;
 import org.osgi.util.tracker.ServiceTracker;
 
 /**
@@ -40,17 +37,11 @@ import org.osgi.util.tracker.ServiceTracker;
  * @author thomas.diesler@jboss.com
  * @since 23-Jan-2009
  */
-public class CommonServicesActivator extends AbstractCommonServicesActivator implements BundleActivator
+public class CommonServicesActivator implements BundleActivator
 {
    private LogServiceTracker logServiceTracker;
    private ServiceTracker logReaderTracker;
    
-   @Override
-   protected void logError(String message, Exception ex)
-   {
-      logServiceTracker.log(LogService.LOG_ERROR, message, ex);
-   }
-
    public void start(BundleContext context)
    {
       logServiceTracker = new LogServiceTracker(context);
@@ -58,12 +49,6 @@ public class CommonServicesActivator extends AbstractCommonServicesActivator imp
       // Track LogReaderService and add/remove LogListener
       logReaderTracker = trackLogReaderService(context);
       logReaderTracker.open();
-      
-      // Register the system SystemDeployerService and DeployerServiceDelegate
-      DeployerService deployer = registerDeployerServices(context);
-      
-      // Track the MBeanServer and register the DeployerServiceDelegate
-      trackMBeanServer(context, deployer);
    }
 
    public void stop(BundleContext context)
@@ -73,35 +58,20 @@ public class CommonServicesActivator extends AbstractCommonServicesActivator imp
       
       if (logReaderTracker != null)
          logReaderTracker.close();
-      
-      ServiceReference sref = context.getServiceReference(MBeanServer.class.getName());
-      if (sref != null)
-      {
-         MBeanServer mbeanServer = (MBeanServer)context.getService(sref);
-         unregisterDeployerServiceMBean(mbeanServer);
-      }
    }
-   
-   private void trackMBeanServer(BundleContext context, final DeployerService deployer)
+
+   private ServiceTracker trackLogReaderService(BundleContext context)
    {
-      ServiceTracker jmxTracker = new ServiceTracker(context, MBeanServer.class.getName(), null)
+      ServiceTracker logTracker = new ServiceTracker(context, LogReaderService.class.getName(), null)
       {
          @Override
          public Object addingService(ServiceReference reference)
          {
-            MBeanServer mbeanServer = (MBeanServer)super.addingService(reference);
-            registerDeployerServiceMBean(mbeanServer, deployer);
-            return mbeanServer;
-         }
-
-         @Override
-         public void removedService(ServiceReference reference, Object service)
-         {
-            MBeanServer mbeanServer = (MBeanServer)service;
-            unregisterDeployerServiceMBean(mbeanServer);
-            super.removedService(reference, service);
+            LogReaderService logReader = (LogReaderService)super.addingService(reference);
+            logReader.addLogListener(new LogListenerBridge());
+            return logReader;
          }
       };
-      jmxTracker.open();
+      return logTracker;
    }
 }
