@@ -40,7 +40,7 @@
   <!-- Properties -->  
   <properties>
     <version.jboss.osgi.spi>1.0.3-SNAPSHOT</version.jboss.osgi.spi>
-    <version.osgi>r4v42</version.osgi>
+    <version.osgi>4.2.0</version.osgi>
   </properties>
   
   <!-- Dependencies -->
