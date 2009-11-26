@@ -25,6 +25,7 @@ package org.jboss.osgi.common.internal;
 
 
 import org.jboss.osgi.common.log.LogServiceTracker;
+import org.jboss.osgi.common.log.LoggingService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -49,6 +50,9 @@ public class CommonServicesActivator implements BundleActivator
       // Track LogReaderService and add/remove LogListener
       logReaderTracker = trackLogReaderService(context);
       logReaderTracker.open();
+      
+      // Register the logging marker service
+      context.registerService(LoggingService.class.getName(), new LoggingService(){}, null);
    }
 
    public void stop(BundleContext context)
