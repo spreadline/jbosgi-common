@@ -21,7 +21,7 @@
   <artifactId>jboss-osgi-common</artifactId>
   <packaging>bundle</packaging>
   
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
   
   <!-- Parent -->
   <parent>

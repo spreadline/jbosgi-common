@@ -23,7 +23,6 @@ package org.jboss.osgi.common.internal;
 
 //$Id$
 
-
 import org.jboss.osgi.common.log.LogServiceTracker;
 import org.jboss.osgi.common.log.LoggingService;
 import org.osgi.framework.BundleActivator;
@@ -31,6 +30,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogReaderService;
 import org.osgi.util.tracker.ServiceTracker;
+import org.slf4j.LoggerFactory;
 
 /**
  * The common services activator
@@ -42,15 +42,18 @@ public class CommonServicesActivator implements BundleActivator
 {
    private LogServiceTracker logServiceTracker;
    private ServiceTracker logReaderTracker;
-   
+
    public void start(BundleContext context)
    {
+      // Initialize the logging systems
+      LoggerFactory.getLogger(CommonServicesActivator.class);
+      
       logServiceTracker = new LogServiceTracker(context);
-      
+
       // Track LogReaderService and add/remove LogListener
-      logReaderTracker = trackLogReaderService(context);
+      logReaderTracker = new LogReaderServiceServiceTracker(context);
       logReaderTracker.open();
-      
+
       // Register the logging marker service
       context.registerService(LoggingService.class.getName(), new LoggingService(){}, null);
    }
@@ -59,23 +62,24 @@ public class CommonServicesActivator implements BundleActivator
    {
       if (logServiceTracker != null)
          logServiceTracker.close();
-      
+
       if (logReaderTracker != null)
          logReaderTracker.close();
    }
 
-   private ServiceTracker trackLogReaderService(BundleContext context)
+   static class LogReaderServiceServiceTracker extends ServiceTracker
    {
-      ServiceTracker logTracker = new ServiceTracker(context, LogReaderService.class.getName(), null)
+      public LogReaderServiceServiceTracker(BundleContext context)
       {
-         @Override
-         public Object addingService(ServiceReference reference)
-         {
-            LogReaderService logReader = (LogReaderService)super.addingService(reference);
-            logReader.addLogListener(new LogListenerBridge());
-            return logReader;
-         }
-      };
-      return logTracker;
+         super(context, LogReaderService.class.getName(), null);
+      }
+
+      @Override
+      public Object addingService(ServiceReference reference)
+      {
+         LogReaderService logReader = (LogReaderService)super.addingService(reference);
+         logReader.addLogListener(new LogListenerBridge());
+         return logReader;
+      }
    }
 }
