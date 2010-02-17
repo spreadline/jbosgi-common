@@ -29,6 +29,7 @@ import org.jboss.osgi.spi.capability.CompendiumCapability;
  * 
  * It is ignored if the {@link LoggingService} is already registered.
  * 
+ * Dependent Capability: {@link CompendiumCapability}
  * Installed bundles: jboss-osgi-common.jar
  * 
  * @author thomas.diesler@jboss.com
