@@ -30,13 +30,6 @@
     <version>1.0.5-SNAPSHOT</version>
   </parent>
   
-  <!-- SCM -->
-  <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</developerConnection>
-    <url>http://fisheye.jboss.com/qsearch/JBossOSGi</url>
-  </scm>
-
   <!-- Properties -->  
   <properties>
     <version.jboss.osgi.spi>1.0.5-SNAPSHOT</version.jboss.osgi.spi>
@@ -98,8 +91,7 @@
             <Import-Package>
                javax.management,
                org.apache.log4j;version=1.2;resolution:=optional, 
-               org.jboss.osgi.spi.capability;version=1.0,
-               org.jboss.osgi.spi.util;version=1.0,
+               org.jboss.osgi.spi*;version="[1.0,2.0)",
                org.osgi.framework;version=1.4,
                org.osgi.service.log;version=1.3,
                org.osgi.util.tracker
@@ -141,4 +133,12 @@
       </plugin>
     </plugins>
   </build>
+  
+  <!-- Subversion -->
+  <scm>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</developerConnection>
+    <url>http://fisheye.jboss.com/qsearch/JBossOSGi</url>
+  </scm>
+
 </project>
