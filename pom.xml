@@ -21,7 +21,7 @@
   <artifactId>jboss-osgi-common</artifactId>
   <packaging>bundle</packaging>
   
-  <version>1.0.4</version>
+  <version>1.0.5-SNAPSHOT</version>
   
   <!-- Parent -->
   <parent>
@@ -136,9 +136,9 @@
   
   <!-- Subversion -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/tags/jboss-osgi-common-1.0.4</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/tags/jboss-osgi-common-1.0.4</developerConnection>
-    <url>http://fisheye.jboss.com/qsearch/JBossOSGi/tags/jboss-osgi-common-1.0.4</url>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</developerConnection>
+    <url>http://fisheye.jboss.com/qsearch/JBossOSGi</url>
   </scm>
 
 </project>
