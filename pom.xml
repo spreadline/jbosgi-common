@@ -21,18 +21,18 @@
   <artifactId>jboss-osgi-common</artifactId>
   <packaging>bundle</packaging>
   
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.4</version>
   
   <!-- Parent -->
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
   </parent>
   
   <!-- Properties -->  
   <properties>
-    <version.jboss.osgi.spi>1.0.5-SNAPSHOT</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.5</version.jboss.osgi.spi>
     <version.slf4j>1.5.8</version.slf4j>
     <version.osgi>4.2.0</version.osgi>
   </properties>
@@ -136,9 +136,9 @@
   
   <!-- Subversion -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</developerConnection>
-    <url>http://fisheye.jboss.com/qsearch/JBossOSGi</url>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/tags/jboss-osgi-common-1.0.4</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/tags/jboss-osgi-common-1.0.4</developerConnection>
+    <url>http://fisheye.jboss.com/qsearch/JBossOSGi/tags/jboss-osgi-common-1.0.4</url>
   </scm>
 
 </project>
