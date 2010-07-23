@@ -14,11 +14,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
-  <name>JBossOSGi Bundles - Common</name>
+  <name>JBossOSGi Common</name>
   <description>The JBossOSGi common services</description>
   
-  <groupId>org.jboss.osgi.bundles</groupId>
-  <artifactId>jboss-osgi-common</artifactId>
+  <groupId>org.jboss.osgi.common</groupId>
+  <artifactId>jbosgi-common</artifactId>
   <packaging>bundle</packaging>
   
   <version>1.0.5-SNAPSHOT</version>
@@ -27,12 +27,12 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.7</version>
   </parent>
   
   <!-- Properties -->  
   <properties>
-    <version.jboss.osgi.spi>1.0.5</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.10</version.jboss.osgi.spi>
     <version.slf4j>1.5.8</version.slf4j>
     <version.osgi>4.2.0</version.osgi>
   </properties>
