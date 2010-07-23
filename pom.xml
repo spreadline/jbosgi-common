@@ -18,7 +18,7 @@
   <description>The JBossOSGi common services</description>
   
   <groupId>org.jboss.osgi.common</groupId>
-  <artifactId>jbosgi-common</artifactId>
+  <artifactId>jboss-osgi-common</artifactId>
   <packaging>bundle</packaging>
   
   <version>1.0.5-SNAPSHOT</version>
@@ -29,6 +29,13 @@
     <artifactId>jboss-osgi-parent</artifactId>
     <version>1.0.7</version>
   </parent>
+  
+  <!-- Source -->
+  <scm>
+    <connection>scm:git:git://github.com/jbosgi/jbosgi-common.git</connection>
+    <developerConnection>scm:git:git@github.com:jbosgi/jbosgi-common.git</developerConnection>
+    <url>http://github.com/jbosgi/jbosgi-common</url>
+  </scm>
   
   <!-- Properties -->  
   <properties>
@@ -83,10 +90,10 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Activator>org.jboss.osgi.common.internal.CommonServicesActivator</Bundle-Activator>
             <Export-Package>
-              org.jboss.osgi.common.log;version=${version}
+              org.jboss.osgi.common.log;version=${project.version}
             </Export-Package>
             <Import-Package>
                javax.management,
@@ -108,37 +115,7 @@
           </instructions>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-artifacts</id>
-            <phase>package</phase>
-            <goals>
-              <goal>attach-artifact</goal>
-            </goals>
-            <configuration>
-              <artifacts>
-                <artifact>
-                  <!-- For some reason the distribution javadoc module needs this -->
-                  <file>target/${artifactId}-${version}-sources.jar</file>
-                  <classifier>sources</classifier>
-                  <type>jar</type>
-                </artifact>
-              </artifacts>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   
-  <!-- Subversion -->
-  <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossas/projects/jboss-osgi/projects/bundles/common/trunk</developerConnection>
-    <url>http://fisheye.jboss.com/qsearch/JBossOSGi</url>
-  </scm>
-
 </project>
