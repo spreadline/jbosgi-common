@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
   </parent>
   
   <!-- Source -->
@@ -37,7 +37,7 @@
   
   <!-- Properties -->  
   <properties>
-    <version.jboss.osgi.spi>1.0.10</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.14-SNAPSHOT</version.jboss.osgi.spi>
     <version.slf4j>1.5.8</version.slf4j>
     <version.osgi>4.2.0</version.osgi>
   </properties>
@@ -50,19 +50,8 @@
       <version>${version.jboss.osgi.spi}</version>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${version.slf4j}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>${version.slf4j}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <version>${version.slf4j}</version>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
     </dependency>
     
     <!-- Provided Dependencies -->
@@ -94,22 +83,12 @@
               org.jboss.osgi.common.log;version=${project.version}
             </Export-Package>
             <Import-Package>
-               javax.management,
-               org.apache.log4j;version=1.2;resolution:=optional, 
+               org.jboss.logging;version="[3.0,3.1)", 
                org.jboss.osgi.spi*;version="[1.0,2.0)",
-               org.osgi.framework;version=1.4,
+               org.osgi.framework;version=1.5,
                org.osgi.service.log;version=1.3,
                org.osgi.util.tracker
             </Import-Package>
-            <Embed-Dependency>
-              jcl-over-slf4j;inline=false,
-              slf4j-api;inline=false,
-              slf4j-log4j12;inline=false,
-            </Embed-Dependency>
-            <_exportcontents>
-              org.apache.commons.logging;version=1.1.1,
-              org.slf4j;version=1.5.8,
-            </_exportcontents>
           </instructions>
         </configuration>
       </plugin>

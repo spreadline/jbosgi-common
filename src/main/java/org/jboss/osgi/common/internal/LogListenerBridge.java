@@ -23,16 +23,15 @@ package org.jboss.osgi.common.internal;
 
 //$Id$
 
+import org.jboss.logging.Logger;
 import org.osgi.framework.Bundle;
 import org.osgi.service.log.LogEntry;
 import org.osgi.service.log.LogListener;
 import org.osgi.service.log.LogService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * A LogListener that logs LogEntrys to SLF4J.
- * 
+ * A LogListener that logs LogEntrys to jboss-logging.
+ *
  * @author thomas.diesler@jboss.com
  * @since 04-Mar-2009
  */
@@ -45,10 +44,10 @@ public class LogListenerBridge implements LogListener
       Throwable throwable = entry.getException();
 
       String loggerName = bundle.getSymbolicName();
-      Logger log = LoggerFactory.getLogger(loggerName);
+      Logger log = Logger.getLogger(loggerName);
 
       String message = entry.getMessage();
-      
+
       if (level == LogService.LOG_DEBUG)
          log.debug(message, throwable);
 
